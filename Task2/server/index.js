@@ -47,8 +47,31 @@ const genPassword = (filter) => {
     return {...filter, password: password, length: password.length};
 }
 
+const isPrime = (num) => {
+    let divisors = [1];  // Initializing divisors array (1 is divisible by all)
+    for(let i=2; i<num; i++) {
+        if(num % i === 0) {   // if divisible then
+            divisors.push(i); // add to divisors array
+        }
+    }
+    num !== 1 && divisors.push(num); // adding num itself to divisors
+    return (divisors.length > 2) ? (divisors) : (num.toString(2)); 
+}
+
+const isPrimeObj = (start, end) => {
+    let output = {};
+    for(let i=start; i<end; i++) {
+        output = {...output, [i]: isPrime(i)}
+    }
+    return output;
+}
+
 app.post("/createPassword", (req, res) => {
     res.status(200).json(genPassword(req.body));
+});
+
+app.post("/isPrime", (req, res) => {
+    res.status(200).json(isPrimeObj(req.body.min, req.body.max));
 });
 
 app.listen(port, (req, res) => {
